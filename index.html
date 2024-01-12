@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Batman Family</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Contenedor principal de la aplicación Vue -->
+    <div id="app">
+        <!-- Encabezado con el título y botón para mostrar/ocultar el carrito -->
+        <header>
+            <h1>Batman Family</h1>
+            <button @click="toggleCart">Ver Carrito</button>
+        </header>
+
+        <!-- Sección principal de la página -->
+        <main>
+            <!-- Lista de productos con bucle v-for -->
+            <section class="products">
+                <div class="product" v-for="(product, index) in products" :key="index">
+                    <h2>{{ product.name }}</h2>
+                    <img :src="product.image" :alt="product.name">
+                    <p>Precio: {{ product.price }}</p>
+                    <input type="number" v-model="product.quantity" min="1">
+                    <button @click="addToCart(product)">Añadir al Carrito</button>
+                </div>
+            </section>
+
+            <!-- Barra lateral del carrito con condicional de clase CSS -->
+            <aside class="sidebar" :class="{ 'show': showCart }">
+                <div class="cart-sidebar">
+                    <h2>Carrito</h2>
+                    <!-- Lista de elementos en el carrito -->
+                    <ul>
+                        <li v-for="(item, index) in cart" :key="index">
+                            {{ item.name }} - Cantidad: {{ item.quantity }} - Subtotal: {{ item.subtotal }}
+                        </li>
+                    </ul>
+                    <hr>
+                    <!-- Total de la compra -->
+                    <p>Total: {{ cartTotal }}</p>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- Inclusión de Vue.js y el script de la aplicación -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
+
+
+<script>
+    // Creación de una instancia de Vue
+    const app = new Vue({
+        el: '#app', // Elemento al que Vue está vinculado
+        data: {
+            products: [
+                { name: 'Batman', image: 'img/batman.jpg', price: 9.99, quantity: 1 },
+                { name: 'Alfred', image: 'img/alfred.jpg', price: 2.99, quantity: 1 },
+                { name: 'Dick Grayson', image: 'img/Dick Grayson.jpg', price: 2.99, quantity: 1 },
+                { name: 'Jason Todd', image: 'img/Jason Todd.jpg', price: 2.99, quantity: 1 },
+                { name: 'Tim Drake', image: 'img/Tim Drake.png', price: 2.99, quantity: 1 },
+                { name: 'Damian Wayne', image: 'img/Damian Wayne.jpg', price: 2.99, quantity: 1 },
+                { name: 'James Gordon', image: 'img/James Gordon.jpg', price: 2.99, quantity: 1 },
+                { name: 'Alfred Pennyworth', image: 'img/Alfred Pennyworth.jpg', price: 2.99, quantity: 1 },
+                { name: 'Cat Woman', image: 'img/Cat Woman.jpg', price: 2.99, quantity: 1 },
+                { name: 'Joker', image: 'img/Joker.jpg', price: 2.99, quantity: 1 },
+                { name: 'Batwoman', image: 'img/Batwoman.jpeg', price: 2.99, quantity: 1 },
+                { name: 'Penguin', image: 'img/Penguin.jpg', price: 2.99, quantity: 1 },
+                { name: 'Two-Face', image: 'img/Two-Face.jpg', price: 2.99, quantity: 1 },
+                { name: 'Riddler', image: 'img/Riddler.jpg', price: 2.99, quantity: 1 },
+                { name: 'Talia al Ghul', image: 'img/Talia al Ghul.jpg', price: 2.99, quantity: 1 },
+                { name: 'Riddler', image: 'img/Riddler.jpg', price: 2.99, quantity: 1 },
+                { name: 'Bane', image: 'img/Bane.jpg', price: 2.99, quantity: 1 },
+
+            ],
+            cart: [], // Carrito de compras
+            showCart: false // Estado de visualización del carrito
+        },
+        computed: {
+            // Propiedad computada para calcular el total del carrito
+            cartTotal() {
+                return this.cart.reduce((total, item) => total + item.subtotal, 0);
+            }
+        },
+        methods: {
+            // Método para agregar un producto al carrito
+            addToCart(product) {
+                // Lógica para gestionar la cantidad y subtotal del producto en el carrito
+                const existingItem = this.cart.find(item => item.name === product.name);
+                const quantity = parseInt(product.quantity);
+                if (existingItem) {
+                    existingItem.quantity = quantity;
+                    existingItem.subtotal = quantity * existingItem.price;
+                } else {
+                    const newItem = {
+                        name: product.name,
+                        price: product.price,
+                        quantity: quantity,
+                        subtotal: product.price * quantity
+                    };
+                    this.cart.push(newItem);
+                }
+            },
+            // Método para alternar la visibilidad del carrito
+            toggleCart() {
+                this.showCart = !this.showCart;
+            }
+        }
+    });
+
+</script>
